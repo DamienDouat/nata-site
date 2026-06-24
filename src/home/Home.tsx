@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import {
-  Play, ArrowRight, CalendarClock, Send, ShieldCheck, ChevronDown,
+  Play, ArrowRight, CalendarClock, Send, ShieldCheck,
   Send as SendIcon, KeyRound, ListChecks, Camera, UserRound, Bell,
   Check, Plus, Minus, Zap, Layers, Layers3, Menu, X,
 } from "lucide-react";
@@ -102,8 +102,8 @@ export function Nav() {
             <img src={LOGO} alt="Nata" className="h-[48px] sm:h-[60px] w-auto" />
           </a>
           <nav className="hidden md:flex items-center gap-1 text-[14px] font-semibold" style={{ color: "var(--ink-soft)" }}>
-            <a onClick={() => go("/")} className="flex items-center gap-1 rounded-[var(--r-sm)] px-2.5 py-1.5 transition-colors hover:bg-[color:var(--paper-3)]" style={{ cursor: "pointer" }}>
-              {t("Produit", "Product")} <ChevronDown size={15} strokeWidth={2.2} />
+            <a onClick={() => go("/")} className="rounded-[var(--r-sm)] px-2.5 py-1.5 transition-colors hover:bg-[color:var(--paper-3)]" style={{ cursor: "pointer" }}>
+              {t("Produit", "Product")}
             </a>
             <a onClick={() => go("/tarifs")} className="rounded-[var(--r-sm)] px-2.5 py-1.5 transition-colors hover:bg-[color:var(--paper-3)]" style={{ cursor: "pointer" }}>{t("Tarifs", "Pricing")}</a>
             <a onClick={() => go("/contact")} className="rounded-[var(--r-sm)] px-2.5 py-1.5 transition-colors hover:bg-[color:var(--paper-3)]" style={{ cursor: "pointer" }}>{t("Contact", "Contact")}</a>
