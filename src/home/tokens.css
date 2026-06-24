@@ -1,0 +1,103 @@
+/* Hallmark · genre: modern-minimal · macrostructure: Workbench (asymétrique, surfaces alternées)
+ * tone: precise / premium B2B · accent: brand green (restrained) · paper: tinted off-white
+ * pre-emit critique: P5 H4 E4 S4 R5 V4
+ */
+:root {
+  /* surfaces (jamais #fff pur — teinté vers le vert de marque) */
+  --paper:        oklch(99.2% 0.004 155);
+  --paper-2:      oklch(97.2% 0.006 155);   /* bande teintée */
+  --paper-3:      oklch(94.6% 0.012 158);   /* carte douce */
+  --ink-section:  oklch(23% 0.028 158);     /* section sombre (CTA) */
+  --ink-section-2:oklch(28% 0.03 158);
+
+  /* encre */
+  --ink:          oklch(24% 0.012 155);
+  --ink-soft:     oklch(44% 0.012 155);
+  --ink-muted:    oklch(58% 0.01 155);
+  --on-dark:      oklch(97% 0.006 155);
+  --on-dark-soft: oklch(80% 0.012 158);
+
+  /* accent (vert de marque, parcimonieux) */
+  --accent:       oklch(58% 0.13 159);
+  --accent-strong:oklch(50% 0.12 159);
+  --accent-soft:  oklch(95% 0.03 159);
+  --accent-ring:  oklch(58% 0.13 159 / 0.35);
+
+  /* hairlines + ombres douces (modern-minimal = profondeur subtile) */
+  --line:         oklch(90% 0.006 155);
+  --line-strong:  oklch(85% 0.008 155);
+  --shadow-sm:    0 1px 2px oklch(24% 0.02 155 / 0.04), 0 1px 1px oklch(24% 0.02 155 / 0.03);
+  --shadow-md:    0 4px 12px -2px oklch(24% 0.02 155 / 0.08), 0 2px 6px -2px oklch(24% 0.02 155 / 0.05);
+  --shadow-lg:    0 24px 48px -16px oklch(24% 0.03 155 / 0.16), 0 8px 20px -12px oklch(24% 0.02 155 / 0.1);
+
+  --r-sm: 8px; --r-md: 12px; --r-lg: 18px; --r-xl: 26px; --r-2xl: 36px;
+
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+
+  --maxw: 1120px;
+}
+
+html { background: var(--paper); }
+body { margin: 0; font-family: "Inter", ui-sans-serif, system-ui, sans-serif; color: var(--ink);
+  -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+
+/* type : -webkit large headings serrés (modern-minimal) */
+.h-display { font-weight: 600; letter-spacing: -0.03em; line-height: 1.02; }
+.h-section { font-weight: 600; letter-spacing: -0.022em; line-height: 1.06; }
+.eyebrow { font-weight: 600; font-size: 13px; letter-spacing: 0.02em; color: var(--accent-strong); }
+
+/* reveal (subtil, modern-minimal) */
+.r { opacity: 0; transform: translateY(16px); transition: opacity .7s var(--ease), transform .7s var(--ease); }
+.r.in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce){ .r{opacity:1;transform:none;transition:none} }
+
+/* reveal bottom-up plus marqué pour les mockups */
+.r.m-mockup { transform: translateY(56px); transition: opacity .8s var(--ease), transform .8s var(--ease); }
+.r.m-mockup.in { transform: none; }
+@media (prefers-reduced-motion: reduce){ .r.m-mockup{transform:none} }
+
+/* joli fond chaud derrière les mockups (pas blanc) */
+.mockup-panel {
+  background: linear-gradient(155deg, oklch(95.5% 0.045 72), oklch(96% 0.02 118) 48%, oklch(95% 0.04 158));
+}
+
+@keyframes home-marq { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* ---- champs de formulaire (page contact) ---- */
+input:focus, textarea:focus { box-shadow: 0 0 0 3px var(--accent-ring); }
+
+/* ---- section produit : cartes empilées au scroll (sticky stack) ---- */
+.stack-cards { display: flex; flex-direction: column; }
+.stack-card {
+  position: -webkit-sticky;
+  position: sticky;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--r-2xl);
+  padding: clamp(28px, 4vw, 56px);
+  box-shadow: var(--shadow-lg);
+  margin-bottom: 40px;
+  transform-origin: center top;
+  will-change: transform;
+}
+.stack-card:last-child { margin-bottom: 0; }
+
+/* enhancement : la carte recouverte rétrécit + s'atténue (navigateurs récents) */
+@supports (animation-timeline: view()) {
+  .stack-card {
+    animation: stack-shrink linear both;
+    animation-timeline: view();
+    animation-range: exit-crossing 0% exit-crossing 100%;
+  }
+  @keyframes stack-shrink {
+    to { transform: scale(0.93) translateY(-8px); filter: brightness(0.96); }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .stack-card { position: static; animation: none; transform: none; margin-bottom: 24px; }
+}
+/* mobile/tablette : pas d'empilement sticky (liste verticale simple, plus prévisible) */
+@media (max-width: 1023px) {
+  .stack-card { position: static; animation: none; transform: none; margin-bottom: 20px; top: auto !important; }
+}

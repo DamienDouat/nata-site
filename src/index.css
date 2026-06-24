@@ -1,0 +1,111 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;1,14..32,400&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html { background: #fff; }
+
+/* on remplace le pattern de tirets Figma par la grille de points interactive (DotGrid) */
+[data-name="Background pattern"], [data-name="Line pattern"] { display: none !important; }
+/* fonds photo basse qualité derrière les mockups téléphone -> retirés (phones propres) */
+[data-name="Background image"] { display: none !important; }
+body { margin: 0; font-family: "Inter", sans-serif; overflow-x: hidden; }
+
+/* Filet de sécurité fonts : certaines classes Figma référencent une variable
+   de famille invalide (--font-family/...) ; le VF n'utilise que Inter. */
+:root {
+  --font-family\/font-family-display: "Inter";
+  --font-family\/font-family-body: "Inter";
+  --ease-out-quint: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* ===== MOTION (emil : transform+opacity, ease-out, reduced-motion safe) ===== */
+.nata-reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s var(--ease-out-quint), transform 0.6s var(--ease-out-quint);
+  will-change: opacity, transform;
+}
+.nata-reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Boutons (instances Figma "Buttons/Button") : hover lift + press scale */
+[data-name^="Buttons/Button"] {
+  cursor: pointer;
+  transition: transform 0.16s var(--ease-out-quint), box-shadow 0.16s ease-out,
+    filter 0.16s ease-out;
+  will-change: transform;
+}
+@media (hover: hover) {
+  [data-name^="Buttons/Button"]:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.04);
+  }
+}
+[data-name^="Buttons/Button"]:active {
+  transform: scale(0.97);
+  transition-duration: 0.1s;
+}
+
+/* Cartes pricing : hover lift doux */
+[data-name^="Pricing tier"], [data-name*="pricing"] {
+  transition: transform 0.2s var(--ease-out-quint), box-shadow 0.2s ease-out;
+}
+@media (hover: hover) {
+  [data-name^="Pricing tier"]:hover {
+    transform: translateY(-4px);
+  }
+}
+
+/* ===== Reveal en cascade (cible data-reveal posée par motion.ts) ===== */
+.m-on [data-reveal] {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s var(--ease-out-quint), transform 0.7s var(--ease-out-quint);
+  will-change: opacity, transform;
+}
+.m-on [data-reveal][data-name="Featured icon"] {
+  transform: translateY(14px) scale(0.8);
+}
+.m-on [data-reveal][data-name="_Pricing tier card"] {
+  transform: translateY(40px) scale(0.97);
+  transition-duration: 0.8s;
+}
+.m-on [data-reveal].m-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* ===== Marquee logos (boucle continue, centré, pause au survol) ===== */
+.m-marquee { overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); }
+.m-marquee-track { display: flex; align-items: center; gap: 72px; width: max-content; animation: m-scroll 38s linear infinite; }
+.m-marquee:hover .m-marquee-track { animation-play-state: paused; }
+.m-logo {
+  height: 30px; width: auto; object-fit: contain; flex: 0 0 auto;
+  filter: grayscale(1); opacity: 0.55;
+  transition: filter 0.3s ease-out, opacity 0.3s ease-out, transform 0.3s var(--ease-out-quint);
+}
+.m-logo:hover { filter: grayscale(0); opacity: 1; transform: scale(1.06); }
+@keyframes m-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* ===== Hovers ===== */
+@media (hover: hover) {
+  [data-name="_Pricing tier card"] { transition: transform 0.25s var(--ease-out-quint), box-shadow 0.25s ease-out; }
+  [data-name="_Pricing tier card"]:hover { transform: translateY(-6px); box-shadow: 0 24px 48px -24px rgba(16,40,30,0.25); }
+  [data-name="Check item text"] { transition: transform 0.2s var(--ease-out-quint); }
+  [data-name="Check item text"]:hover { transform: translateX(4px); }
+  [data-name="Logos"] img { transition: filter 0.25s ease-out, transform 0.25s var(--ease-out-quint); }
+  .m-marquee:hover img:hover { transform: scale(1.08); }
+}
+
+/* respecte le mouvement réduit : motion.ts pose .m-off et ne cache rien */
+.m-off [data-reveal] { opacity: 1 !important; transform: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  [data-name^="Buttons/Button"]:hover,
+  [data-name^="Buttons/Button"]:active,
+  [data-name="_Pricing tier card"]:hover { transform: none !important; }
+  .m-marquee-track { animation: none !important; }
+}
